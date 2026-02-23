@@ -56,6 +56,19 @@ public class Length {
         return new Length(convertedValue,targetUnit);
     }
 
+    public Length add(Length thatLength){
+        double thisToBaseUnit = this.convertToBaseUnit();
+        double thatToBaseUnit = thatLength.convertToBaseUnit();
+        double totalBaseUnit = thisToBaseUnit + thatToBaseUnit;
+        double newValue = totalBaseUnit / this.unit.getConversionFactor();
+        return new Length(newValue,this.unit);
+    }
+
+    private double convertFromBaseToTargetUnit(double lengthInInches,LengthUnit targetUnit){
+        double newValue = lengthInInches/targetUnit.getConversionFactor();
+        return newValue;
+    }
+
     @Override
     public String toString(){
         return String.format("%.2f %s",this.value,this.unit);
