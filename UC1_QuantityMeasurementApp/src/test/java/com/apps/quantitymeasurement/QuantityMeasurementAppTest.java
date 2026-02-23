@@ -144,4 +144,19 @@ public class QuantityMeasurementAppTest {
         Length inches1 = new Length(36.0, Length.LengthUnit.INCHES);
         assertTrue(yard1.equals(inches1));
     }
+
+    @Test
+    public void convertFeetToInches(){
+        Length lengthInInches = QuantityMeasurementApp.demonstrateLengthConversion(3.0, Length.LengthUnit.FEET, Length.LengthUnit.INCHES);
+        Length expectedLength = new Length(36.0, Length.LengthUnit.INCHES);
+        assertTrue(QuantityMeasurementApp.demonstrateLengthEquality(lengthInInches,expectedLength));
+    }
+
+    @Test
+    public void convertYardsToInchesUsingOverloadedMethod(){
+        Length lengthInYards = new Length(3.0, Length.LengthUnit.YARDS);
+        Length lengthInInches = QuantityMeasurementApp.demonstrateLengthConversion(lengthInYards, Length.LengthUnit.INCHES);
+        Length expectedLength = new Length(72.0, Length.LengthUnit.INCHES);
+        assertTrue(QuantityMeasurementApp.demonstrateLengthEquality(lengthInYards,lengthInInches));
+    }
 }

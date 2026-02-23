@@ -49,17 +49,26 @@ public class Length {
         return compare((Length) o);
     }
 
+    public Length convertTo(LengthUnit targetUnit) throws IllegalArgumentException{
+        if(targetUnit == null) throw new IllegalArgumentException();
+        double baseValue = convertToBaseUnit();
+        double convertedValue = baseValue/ targetUnit.getConversionFactor();
+        return new Length(convertedValue,targetUnit);
+    }
+
+    @Override
+    public String toString(){
+        return String.format("%.2f %s",this.value,this.unit);
+    }
+
     public static void main(String[] args) {
-        Length length1 = new Length(1.0,LengthUnit.FEET);
-        Length length2 = new Length(12.0,LengthUnit.INCHES);
-        System.out.println("Are lengths equal? "+length1.equals(length2));
+        Length length1 = new Length(3.0,LengthUnit.FEET);
+        Length length2 = new Length(2.0,LengthUnit.YARDS);
 
-        Length length3 = new Length(1.0,LengthUnit.YARDS);
-        Length length4 = new Length(36.0,LengthUnit.INCHES);
-        System.out.println("Are lengths equal? "+length3.equals(length4));
+        Length length3 = length1.convertTo(LengthUnit.INCHES);
+        Length length4 = length2.convertTo(LengthUnit.INCHES);
+        System.out.println(length3);
+        System.out.println(length4);
 
-        Length length5 = new Length(100.0,LengthUnit.CENTIMETERS);
-        Length length6 = new Length(39.3701,LengthUnit.INCHES);
-        System.out.println("Are lengths equal? "+length5.equals(length6));
     }
 }
