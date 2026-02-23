@@ -6,6 +6,14 @@ public class Length {
     private double value;
     private LengthUnit unit;
 
+    public double getValue() {
+        return value;
+    }
+
+    public LengthUnit getUnit() {
+        return unit;
+    }
+
     public enum LengthUnit{
         FEET(12.0),
         INCHES(1.0),
@@ -62,6 +70,18 @@ public class Length {
         double totalBaseUnit = thisToBaseUnit + thatToBaseUnit;
         double newValue = totalBaseUnit / this.unit.getConversionFactor();
         return new Length(newValue,this.unit);
+    }
+
+    public Length add(Length length,LengthUnit targetUnit){
+        return addAndConvert(length,targetUnit);
+    }
+
+    private Length addAndConvert(Length length , LengthUnit targetUnit){
+        double thisToBaseUnit = this.convertToBaseUnit();
+        double thatToBaseUnit = length.convertToBaseUnit();
+        double totalBaseUnit = thisToBaseUnit + thatToBaseUnit;
+        double newValue = totalBaseUnit / targetUnit.getConversionFactor();
+        return new Length(newValue,targetUnit);
     }
 
     private double convertFromBaseToTargetUnit(double lengthInInches,LengthUnit targetUnit){

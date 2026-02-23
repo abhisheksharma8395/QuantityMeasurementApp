@@ -6,10 +6,7 @@ package com.apps.quantitymeasurement;
 
 import org.junit.jupiter.api.Test;
 
-
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class QuantityMeasurementAppTest {
@@ -168,4 +165,119 @@ public class QuantityMeasurementAppTest {
         Length expectedLength = new Length(2.0, Length.LengthUnit.FEET);
         assertTrue(expectedLength.equals(sumLength));
     }
+
+    @Test
+    public void testAddition_ExplicitTargetUnit_Feet(){
+        Length length1 = new Length(1.0, Length.LengthUnit.FEET);
+        Length length2 = new Length(12.0,Length.LengthUnit.INCHES);
+        Length sumLength = QuantityMeasurementApp.demonstrateLengthAddition(length1,length2, Length.LengthUnit.FEET);
+        Length expectedLength = new Length(2.0, Length.LengthUnit.FEET);
+        assertTrue(expectedLength.equals(sumLength));
+    }
+
+    @Test
+    public void testAddition_ExplicitTargetUnit_Inches(){
+        Length length1 = new Length(1.0, Length.LengthUnit.FEET);
+        Length length2 = new Length(12.0,Length.LengthUnit.INCHES);
+        Length sumLength = QuantityMeasurementApp.demonstrateLengthAddition(length1,length2, Length.LengthUnit.INCHES);
+        Length expectedLength = new Length(24.0, Length.LengthUnit.INCHES);
+        assertTrue(expectedLength.equals(sumLength));
+    }
+
+    @Test
+    public void testAddition_ExplicitTargetUnit_Yards(){
+        Length length1 = new Length(1.0, Length.LengthUnit.FEET);
+        Length length2 = new Length(12.0,Length.LengthUnit.INCHES);
+        Length sumLength = QuantityMeasurementApp.demonstrateLengthAddition(length1,length2, Length.LengthUnit.YARDS);
+        double expectedLength = 0.667;
+        assertEquals(expectedLength,sumLength.getValue(),0.001);
+    }
+
+    @Test
+    public void testAddition_ExplicitTargetUnit_Centimeters(){
+        Length length1 = new Length(1.0, Length.LengthUnit.INCHES);
+        Length length2 = new Length(1.0,Length.LengthUnit.INCHES);
+        Length sumLength = QuantityMeasurementApp.demonstrateLengthAddition(length1,length2, Length.LengthUnit.CENTIMETERS);
+        Length expectedLength = new Length(5.08, Length.LengthUnit.CENTIMETERS);
+        assertTrue(expectedLength.equals(sumLength));
+    }
+
+    @Test
+    public void testAddition_ExplicitTargetUnit_SameAsFirstOperand(){
+        Length length1 = new Length(2.0, Length.LengthUnit.YARDS);
+        Length length2 = new Length(3.0,Length.LengthUnit.FEET);
+        Length sumLength = QuantityMeasurementApp.demonstrateLengthAddition(length1,length2, Length.LengthUnit.YARDS);
+        Length expectedLength = new Length(3.0, Length.LengthUnit.YARDS);
+        assertTrue(expectedLength.equals(sumLength));
+    }
+
+    @Test
+    public void testAddition_ExplicitTargetUnit_SameAsSecondOperand(){
+        Length length1 = new Length(2.0, Length.LengthUnit.YARDS);
+        Length length2 = new Length(3.0,Length.LengthUnit.FEET);
+        Length sumLength = QuantityMeasurementApp.demonstrateLengthAddition(length1,length2, Length.LengthUnit.FEET);
+        Length expectedLength = new Length(9.0, Length.LengthUnit.FEET);
+        assertTrue(expectedLength.equals(sumLength));
+    }
+
+    @Test
+    public void testAddition_ExplicitTargetUnit_Commutativity(){
+        Length length1 = new Length(1.0, Length.LengthUnit.FEET);
+        Length length2 = new Length(12.0,Length.LengthUnit.INCHES);
+        Length sumLength1 = QuantityMeasurementApp.demonstrateLengthAddition(length1,length2, Length.LengthUnit.YARDS);
+
+        Length length3 = new Length(12.0, Length.LengthUnit.INCHES);
+        Length length4 = new Length(1.0,Length.LengthUnit.FEET);
+        Length sumLength2 = QuantityMeasurementApp.demonstrateLengthAddition(length3,length4, Length.LengthUnit.YARDS);
+        assertTrue(sumLength1.equals(sumLength2));
+    }
+
+    @Test
+    public void testAddition_ExplicitTargetUnit_WithZero(){
+        Length length1 = new Length(5.0, Length.LengthUnit.FEET);
+        Length length2 = new Length(0.0,Length.LengthUnit.INCHES);
+        Length sumLength = QuantityMeasurementApp.demonstrateLengthAddition(length1,length2, Length.LengthUnit.YARDS);
+        double expectedLength = 1.667;
+        assertEquals(expectedLength, sumLength.getValue(),0.001);
+    }
+
+    @Test
+    public void testAddition_ExplicitTargetUnit_NegativeValues(){
+        Length length1 = new Length(5.0, Length.LengthUnit.FEET);
+        Length length2 = new Length(-2.0,Length.LengthUnit.FEET);
+        Length sumLength = QuantityMeasurementApp.demonstrateLengthAddition(length1,length2, Length.LengthUnit.INCHES);
+        Length expectedLength = new Length(36.0, Length.LengthUnit.INCHES);
+        assertTrue(expectedLength.equals(sumLength));
+    }
+
+    @Test
+    public void testAddition_ExplicitTargetUnit_NullTargetUnit(){
+        Length length1 = new Length(1.0, Length.LengthUnit.FEET);
+        Length length2 = new Length(12.0,Length.LengthUnit.INCHES);
+        assertThrows(IllegalArgumentException.class,() -> QuantityMeasurementApp.demonstrateLengthAddition(length1,length2, null));
+    }
+
+    @Test
+    public void testAddition_ExplicitTargetUnit_LargeToSmallScale() {
+        Length length1 = new Length(1000.0, Length.LengthUnit.FEET);
+        Length length2 = new Length(500.0, Length.LengthUnit.FEET);
+        Length sumLength = QuantityMeasurementApp.demonstrateLengthAddition(length1, length2, Length.LengthUnit.INCHES);
+        Length expectedLength = new Length(18000.0, Length.LengthUnit.INCHES);
+        assertTrue(expectedLength.equals(sumLength));
+    }
+
+    @Test
+    public void testAddition_ExplicitTargetUnit_SmallToLargeScale(){
+        Length length1 = new Length(12.0, Length.LengthUnit.INCHES);
+        Length length2 = new Length(12.0,Length.LengthUnit.INCHES);
+        Length sumLength = QuantityMeasurementApp.demonstrateLengthAddition(length1,length2, Length.LengthUnit.YARDS);
+        double expectedLength = 0.667;
+        assertEquals(expectedLength,sumLength.getValue(),0.001);
+    }
+
+
+
+
+
+
 }
