@@ -1,6 +1,6 @@
 package com.apps.quantitymeasurement;
 
-public enum WeightUnit {
+public enum WeightUnit implements IMeasurable {
 
     MILLIGRAM(0.001),
     GRAM(1.0),
