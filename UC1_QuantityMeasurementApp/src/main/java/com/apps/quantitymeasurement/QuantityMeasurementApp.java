@@ -45,6 +45,28 @@ public class QuantityMeasurementApp {
         // Demonstration addition with specified target unit
         Quantity<WeightUnit> sumWeightInGrams = demonstrateAddition(weightInKilograms, weightInPounds, WeightUnit.GRAM);
         System.out.println("Sum Weight in Grams: " + sumWeightInGrams.getValue() + " " + sumWeightInGrams.getUnit());
+
+        // Demonstration equality between the two quantities
+        Quantity<VolumeUnit> volumeInLitre = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> volumeInMillilitre = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+        boolean areVolumesEqual = demonstrateEquality(volumeInLitre, volumeInMillilitre);
+        System.out.println("Are volumes equal? " + areVolumesEqual);
+
+
+        // Demonstration conversion between the two quantities
+        Quantity<VolumeUnit> convertedVolume = demonstrateConversion(volumeInLitre, VolumeUnit.MILLILITRE);
+        System.out.println("Converted Volume: " + convertedVolume.getValue() + " " + convertedVolume.getUnit());
+
+
+        // Demonstration addition of two quantities (result in first unit)
+        Quantity<VolumeUnit> volumeInGallon = new Quantity<>(1.0, VolumeUnit.GALLON);
+        Quantity<VolumeUnit> litreEquivalentOfGallon = new Quantity<>(3.78541, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> sumVolume = demonstrateAddition(volumeInGallon, litreEquivalentOfGallon);
+        System.out.println("Sum Volume: " + sumVolume.getValue() + " " + sumVolume.getUnit());
+
+        // Demonstration addition with specified target unit
+        Quantity<VolumeUnit> sumVolumeInMillilitre = demonstrateAddition(volumeInLitre, volumeInMillilitre, VolumeUnit.MILLILITRE);
+        System.out.println("Sum Volume in Millilitre: " + sumVolumeInMillilitre.getValue() + " " + sumVolumeInMillilitre.getUnit());
     }
 }
 
