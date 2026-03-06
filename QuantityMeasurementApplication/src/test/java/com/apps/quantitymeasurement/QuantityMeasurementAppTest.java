@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class QuantityMeasurementAppTest {
 
-    // UC-01 Test Cases
+    // UC-01 Test
     @Test
     public void testFeetEquality_SameValue(){
         Feet feet1 = new Feet(5.6);
