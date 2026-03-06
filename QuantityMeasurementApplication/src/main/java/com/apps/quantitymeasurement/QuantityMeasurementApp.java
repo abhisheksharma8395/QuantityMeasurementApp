@@ -2,7 +2,7 @@ package com.apps.quantitymeasurement;
 
 public class QuantityMeasurementApp {
 
-    // UC-01
+
     public static class Feet {
         private final double value;                               // Stores the feets
 
