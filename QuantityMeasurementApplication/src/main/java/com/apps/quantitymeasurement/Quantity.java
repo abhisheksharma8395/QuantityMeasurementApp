@@ -41,12 +41,40 @@ public class Quantity<U extends IMeasurable> {
         return new Quantity<>(convertedValue,this.unit);
     }
 
-    // This method first converts the both quantity to their base unit , adds the value and then convert the sum back to the target unit.
+    // This method first converts the both quantity to their base unit , adds the value and then convert the sum back to the unit of target unit.
     public Quantity<U> add(Quantity<U> other, U targetUnit){
+        if(other == null || targetUnit == null) throw new IllegalArgumentException();
         double value1 = this.unit.convertToBaseUnit(this.value);
         double value2 = other.unit.convertToBaseUnit(other.value);
         double convertedValue = (value1 + value2)/targetUnit.getConversionFactor();
         return new Quantity<>(convertedValue,targetUnit);
+    }
+
+    // This method first converts the both quantity to their base unit , subtract the value and then convert the result back to the unit of this quantity.
+    public Quantity<U> subtract(Quantity<U> other){
+        if(other == null) throw new IllegalArgumentException();
+        double value1 = this.unit.convertToBaseUnit(this.value);
+        double value2 = other.unit.convertToBaseUnit(other.value);
+        double convertedValue = (value1 - value2)/this.unit.getConversionFactor();
+        return new Quantity<>(convertedValue,this.unit);
+    }
+
+    // This method first converts the both quantity to their base unit , subtracts the value and then convert the result back to the target unit.
+    public Quantity<U> subtract(Quantity<U> other, U targetUnit){
+        if(other == null || targetUnit == null) throw new IllegalArgumentException();
+        double value1 = this.unit.convertToBaseUnit(this.value);
+        double value2 = other.unit.convertToBaseUnit(other.value);
+        double convertedValue = (value1 - value2)/targetUnit.getConversionFactor();
+        return new Quantity<>(convertedValue,targetUnit);
+    }
+
+    // This method first converts the both quantity to their base unit , return the result of their division.
+    public double divide(Quantity<U> other){
+        if(other == null) throw new IllegalArgumentException();
+        else if(other.value == 0) throw new ArithmeticException();
+        double value1 = this.unit.convertToBaseUnit(this.value);
+        double value2 = other.unit.convertToBaseUnit(other.value);
+        return value1/value2;
     }
 
     // this method is return boolean if this quantity is equals to quantity passed in parameter after converting both to the base unit
@@ -68,6 +96,11 @@ public class Quantity<U extends IMeasurable> {
     public int hashCode() {
         double baseValue = this.value * this.unit.getConversionFactor();
         return Objects.hash(baseValue);
+    }
+
+    @Override
+    public String toString(){
+        return this.value+" "+this.unit;
     }
 
     public static void main(String[] args) {

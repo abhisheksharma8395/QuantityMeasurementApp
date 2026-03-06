@@ -26,6 +26,20 @@ public class QuantityMeasurementApp {
         return quantity1.add(quantity2, targetUnit);
     }
 
+    public static <U extends IMeasurable> Quantity<U> demonstrateSubtraction(Quantity<U> quantity1, Quantity<U> quantity2) {
+        return quantity1.add(quantity2);
+    }
+
+    public static <U extends IMeasurable> Quantity<U> demonstrateSubtraction(Quantity<U> quantity1, Quantity<U> quantity2, U targetUnit) {
+        if (targetUnit == null) throw new IllegalArgumentException();
+        return quantity1.add(quantity2, targetUnit);
+    }
+
+    public static <U extends IMeasurable> double demonstrateDivison(Quantity<U> quantity1, Quantity<U> quantity2, U targetUnit) {
+        if (targetUnit == null) throw new IllegalArgumentException();
+        return quantity1.divide(quantity2);
+    }
+
     public static void main(String[] args) {
         // Demonstration equality between the two quantities
         Quantity<WeightUnit> weightInGrams = new Quantity<>(1000.0, WeightUnit.GRAM);
@@ -67,6 +81,15 @@ public class QuantityMeasurementApp {
         // Demonstration addition with specified target unit
         Quantity<VolumeUnit> sumVolumeInMillilitre = demonstrateAddition(volumeInLitre, volumeInMillilitre, VolumeUnit.MILLILITRE);
         System.out.println("Sum Volume in Millilitre: " + sumVolumeInMillilitre.getValue() + " " + sumVolumeInMillilitre.getUnit());
+
+        Quantity<VolumeUnit> litre = new Quantity<>(1.0,VolumeUnit.LITRE);
+        Quantity<VolumeUnit> millilitre = new Quantity<>(2000.0,VolumeUnit.MILLILITRE);
+
+        Quantity<VolumeUnit> gallon = new Quantity<>(1.0,VolumeUnit.GALLON);
+        Quantity<VolumeUnit> litreVolume = new Quantity<>(3.78541,VolumeUnit.LITRE);
+
+        System.out.println(millilitre.divide(litre));
+        System.out.println(gallon.subtract(litreVolume));
     }
 }
 
