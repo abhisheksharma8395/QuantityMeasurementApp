@@ -6,6 +6,21 @@ public enum LengthUnit implements IMeasurable{
     YARDS(3.0),
     CENTIMETERS(1/(30.48));
 
+    SupportsArithmetic supportsArithmetic = () -> true;
+
+    @Override
+    public boolean supportsArithmetic(){
+        return supportsArithmetic.isSupported();
+    }
+
+    @Override
+    public void validateOperationsupports(String operation) {
+        if(!supportsArithmetic.isSupported()){
+            String message = this.name() + " does not support "+ operation + "operations.";
+            throw new UnsupportedOperationException(message);
+        }
+    }
+
 
     private final double conversionFactor;
 

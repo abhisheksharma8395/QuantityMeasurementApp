@@ -24,49 +24,83 @@ public class Quantity<U extends IMeasurable> {
 
     // This method first converts the current value to the base unit , then convert the base value to target unit.
     public <U extends IMeasurable> double convertTo(U targetUnit){
+        if(this.unit.getClass().equals(TemperatureUnit.class)){
+            TemperatureUnit thisUnit = (TemperatureUnit) unit;
+            double newValue = thisUnit.convertTo(this.value,(TemperatureUnit) targetUnit);
+            return newValue;
+        }
         double baseValue = this.value * this.unit.getConversionFactor();
         return baseValue / targetUnit.getConversionFactor();
     }
 
     public <U extends IMeasurable> Quantity<U> convert(U targetUnit){
-        double baseValue = this.value * this.unit.getConversionFactor();
-        return new Quantity<>(baseValue / targetUnit.getConversionFactor(),targetUnit);
+        return new Quantity<>(convertTo(targetUnit),targetUnit);
     }
 
 
     // This method first converts the both quantity to their base unit , adds the value and then convert the sum back to the unit of this quantity.
-    public Quantity<U> add(Quantity<U> other){
-        validateArithmeticOperands(other,null,false);
-        double newValue = performArithmetic(other,this.unit,ArithmeticOperation.ADD);
-        return new Quantity<U>(newValue,this.unit);
+    public Quantity<U> add(Quantity<U> other) throws UnsupportedOperationException{
+        if(this.unit.supportsArithmetic()){
+            validateArithmeticOperands(other,null,false);
+            double newValue = performArithmetic(other,this.unit,ArithmeticOperation.ADD);
+            return new Quantity<U>(newValue,this.unit);
+        }
+        else{
+            this.unit.validateOperationsupports("ADD");
+            return null;
+        }
     }
 
     // This method first converts the both quantity to their base unit , adds the value and then convert the sum back to the unit of target unit.
-    public Quantity<U> add(Quantity<U> other, U targetUnit){
-        validateArithmeticOperands(other,targetUnit,true);
-        double newValue = performArithmetic(other,targetUnit,ArithmeticOperation.ADD);
-        return new Quantity<U>(newValue,targetUnit);
+    public Quantity<U> add(Quantity<U> other, U targetUnit) throws UnsupportedOperationException{
+        if(this.unit.supportsArithmetic()) {
+            validateArithmeticOperands(other, targetUnit, true);
+            double newValue = performArithmetic(other, targetUnit, ArithmeticOperation.ADD);
+            return new Quantity<U>(newValue, targetUnit);
+        }
+        else{
+            this.unit.validateOperationsupports("ADD");
+            return null;
+        }
     }
 
     // This method first converts the both quantity to their base unit , subtract the value and then convert the result back to the unit of this quantity.
-    public Quantity<U> subtract(Quantity<U> other){
-        validateArithmeticOperands(other,null,false);
-        double newValue = performArithmetic(other,this.unit,ArithmeticOperation.SUBTRACT);
-        return new Quantity<U>(newValue,this.unit);
+    public Quantity<U> subtract(Quantity<U> other) throws UnsupportedOperationException{
+        if(this.unit.supportsArithmetic()) {
+            validateArithmeticOperands(other, null, false);
+            double newValue = performArithmetic(other, this.unit, ArithmeticOperation.SUBTRACT);
+            return new Quantity<U>(newValue, this.unit);
+        }
+        else{
+            this.unit.validateOperationsupports("SUBTRACT");
+            return null;
+        }
     }
 
     // This method first converts the both quantity to their base unit , subtracts the value and then convert the result back to the target unit.
-    public Quantity<U> subtract(Quantity<U> other, U targetUnit){
-        validateArithmeticOperands(other,targetUnit,true);
-        double newValue = performArithmetic(other,targetUnit,ArithmeticOperation.SUBTRACT);
-        return new Quantity<U>(newValue,targetUnit);
+    public Quantity<U> subtract(Quantity<U> other, U targetUnit) throws UnsupportedOperationException{
+        if(this.unit.supportsArithmetic()) {
+            validateArithmeticOperands(other, targetUnit, true);
+            double newValue = performArithmetic(other, targetUnit, ArithmeticOperation.SUBTRACT);
+            return new Quantity<U>(newValue, targetUnit);
+        }
+        else{
+            this.unit.validateOperationsupports("SUBTRACT");
+            return null;
+        }
     }
 
     // This method first converts the both quantity to their base unit , return the result of their division.
-    public double divide(Quantity<U> other){
-        validateArithmeticOperands(other,null,false);
-        double ratio = ArithmeticOperation.DIVIDE.compute(this.unit.convertToBaseUnit(this.value), other.unit.convertToBaseUnit(other.value));
-        return ratio;
+    public double divide(Quantity<U> other) throws UnsupportedOperationException{
+        if(this.unit.supportsArithmetic()) {
+            validateArithmeticOperands(other, null, false);
+            double ratio = ArithmeticOperation.DIVIDE.compute(this.unit.convertToBaseUnit(this.value), other.unit.convertToBaseUnit(other.value));
+            return ratio;
+        }
+        else{
+            this.unit.validateOperationsupports("SUBTRACT");
+            return 0.0;
+        }
     }
 
 
@@ -129,26 +163,36 @@ public class Quantity<U extends IMeasurable> {
     }
 
     public static void main(String[] args) {
+        System.out.println(new Quantity<>(0.0, TemperatureUnit.CELSIUS).equals(new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT)));
+        System.out.println(new Quantity<>(273.15, TemperatureUnit.KELVIN).equals(new Quantity<>(0.0, TemperatureUnit.CELSIUS)));
+        System.out.println(new Quantity<>(212.0, TemperatureUnit.FAHRENHEIT).equals(new Quantity<>(100.0, TemperatureUnit.CELSIUS)));
+        System.out.println(new Quantity<>(100.0, TemperatureUnit.CELSIUS).equals(new Quantity<>(373.15, TemperatureUnit.KELVIN)));
+        System.out.println(new Quantity<>(50.0, TemperatureUnit.CELSIUS).equals(new Quantity<>(122.0, TemperatureUnit.FAHRENHEIT)));
 
-        Quantity<LengthUnit> lengthInFeet = new Quantity<>(10.0, LengthUnit.FEET);
-        Quantity<LengthUnit> lengthInInches = new Quantity<>(120.0, LengthUnit.INCHES);
-        boolean isEqual = lengthInFeet.equals(lengthInInches);
-        System.out.println("Are lengths equal? " + isEqual);
+        System.out.println(new Quantity<>(100.0, TemperatureUnit.CELSIUS).convertTo(TemperatureUnit.FAHRENHEIT));
+        System.out.println(new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT).convertTo(TemperatureUnit.CELSIUS));
+        System.out.println(new Quantity<>(273.15, TemperatureUnit.KELVIN).convertTo(TemperatureUnit.CELSIUS));
+        System.out.println(new Quantity<>(0.0, TemperatureUnit.CELSIUS).convertTo(TemperatureUnit.KELVIN));
+        System.out.println(new Quantity<>(-40.0, TemperatureUnit.CELSIUS).convertTo(TemperatureUnit.FAHRENHEIT));
 
-        Quantity<WeightUnit> weightInKilograms = new Quantity<>(1.0, WeightUnit.KILOGRAM);
-        Quantity<WeightUnit> weightInGrams = new Quantity<>(1000.0, WeightUnit.GRAM);
-        isEqual = weightInKilograms.equals(weightInGrams); // true
-        System.out.println("Are weights equal? " + isEqual);
+        try {
+            new Quantity<>(100.0, TemperatureUnit.CELSIUS).add(new Quantity<>(50.0, TemperatureUnit.CELSIUS));
+        } catch (UnsupportedOperationException e) {
+            System.out.println(e.getMessage());
+        }
 
-        double convertedLength = lengthInFeet.convertTo(LengthUnit.INCHES);
-        System.out.println("10 feet in inches: " + convertedLength);
+        try {
+            new Quantity<>(100.0, TemperatureUnit.CELSIUS).subtract(new Quantity<>(50.0, TemperatureUnit.CELSIUS));
+        } catch (UnsupportedOperationException e) {
+            System.out.println(e.getMessage());
+        }
 
-        Quantity<LengthUnit> totalLength = lengthInFeet.add(lengthInInches, LengthUnit.FEET);
-        System.out.println("Total length in feet: " + totalLength.getValue() + " " + totalLength.getUnit());
+        try {
+            new Quantity<>(100.0, TemperatureUnit.CELSIUS).divide(new Quantity<>(50.0, TemperatureUnit.CELSIUS));
+        } catch (UnsupportedOperationException e) {
+            System.out.println(e.getMessage());
+        }
 
-        Quantity<WeightUnit> weightInPounds = new Quantity<>(2.0, WeightUnit.POUND);
-        Quantity<WeightUnit> totalWeight = weightInKilograms.add(weightInPounds, WeightUnit.KILOGRAM);
-        System.out.println("Total weight in kilograms: " + totalWeight.getValue() + " " + totalWeight.getUnit());
-
+        System.out.println(new Quantity<>(100.0, TemperatureUnit.CELSIUS).equals(new Quantity<>(100.0, LengthUnit.FEET)));
     }
 }

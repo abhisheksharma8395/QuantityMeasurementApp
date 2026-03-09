@@ -8,6 +8,21 @@ public enum WeightUnit implements IMeasurable {
     POUND(453.592),
     TONNE(1_000_000.0);
 
+    SupportsArithmetic supportsArithmetic = () -> true;
+
+    @Override
+    public boolean supportsArithmetic(){
+        return supportsArithmetic.isSupported();
+    }
+
+    @Override
+    public void validateOperationsupports(String operation) {
+        if(!supportsArithmetic.isSupported()){
+            String message = this.name() + " does not support "+ operation + "operations.";
+            throw new UnsupportedOperationException(message);
+        }
+    }
+
     private final double conversionFactor;
 
     WeightUnit(double conversionFactor){

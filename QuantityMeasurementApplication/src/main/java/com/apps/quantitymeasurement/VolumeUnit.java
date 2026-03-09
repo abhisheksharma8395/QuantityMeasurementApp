@@ -5,6 +5,21 @@ public enum VolumeUnit implements IMeasurable{
     MILLILITRE(1.0 /1000),
     GALLON(3.78541);
 
+    SupportsArithmetic supportsArithmetic = () -> true;
+
+    @Override
+    public boolean supportsArithmetic(){
+        return supportsArithmetic.isSupported();
+    }
+
+    @Override
+    public void validateOperationsupports(String operation) {
+        if(!supportsArithmetic.isSupported()){
+            String message = this.name() + " does not support "+ operation + "operations.";
+            throw new UnsupportedOperationException(message);
+        }
+    }
+
     private final double conversionFactor;
     VolumeUnit(double conversionFactor){
         this.conversionFactor = conversionFactor;
