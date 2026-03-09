@@ -20,6 +20,14 @@ public class QuantityMeasurementAppTest {
     }
 
     @Test
+    void testSubtractionOfVolumesInSameUnit() {
+        Quantity<VolumeUnit> volume1 = new Quantity<>(10.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> volume2 = new Quantity<>(506, VolumeUnit.MILLILITRE);
+        Quantity<VolumeUnit> expectedVolume = new Quantity<>(9.494,VolumeUnit.LITRE);
+        assertTrue(expectedVolume.equals(volume1.subtract(volume2)));
+    }
+
+    @Test
     void backwardCompatibilityConvertWeightKilogramsToGrams() {
         weightKilogramEqualsGrams();
     }
@@ -60,10 +68,24 @@ public class QuantityMeasurementAppTest {
     }
 
     @Test
+    void testDivisionWithTargetUnit() {
+        Quantity<LengthUnit> length1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> length2 = new Quantity<>(2.0, LengthUnit.FEET);
+        assertEquals(5.0,length1.divide(length2),0.001);
+    }
+
+    @Test
     void weightKilogramEqualsGrams() {
         Quantity<WeightUnit> kg = new Quantity<>(1.0, WeightUnit.KILOGRAM);
         Quantity<WeightUnit> grams = new Quantity<>(1000.0, WeightUnit.GRAM);
         assertEquals(kg, grams);
+    }
+
+    @Test
+    void testDivisionOfWeightsWithDifferentUnits() {
+        Quantity<WeightUnit> weight1 = new Quantity<>(10.0, WeightUnit.KILOGRAM);
+        Quantity<WeightUnit> weight2 = new Quantity<>(500.0, WeightUnit.GRAM);
+        assertEquals(20.0,weight1.divide(weight2),0.001);
     }
 
     @Test
@@ -78,6 +100,13 @@ public class QuantityMeasurementAppTest {
         Quantity<LengthUnit> feet = new Quantity<>(1.0, LengthUnit.FEET);
         Quantity<LengthUnit> inches = new Quantity<>(12.0, LengthUnit.INCHES);
         assertEquals(feet, inches);
+    }
+
+    @Test
+    void testSubtractionOfWeightsWithDifferentUnits(){
+        Quantity<WeightUnit> weight1 = new Quantity<>(15.0, WeightUnit.KILOGRAM);
+        Quantity<WeightUnit> weight2 = new Quantity<>(1500.0, WeightUnit.GRAM);
+        assertEquals(13.500,weight1.subtract(weight2).getValue(),0.001);
     }
 
     @Test
@@ -126,11 +155,25 @@ public class QuantityMeasurementAppTest {
     }
 
     @Test
+    void testDivisionOfVolumesWithDifferentUnits(){
+        Quantity<VolumeUnit> volume1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> volume2 = new Quantity<>(500.0,VolumeUnit.MILLILITRE);
+        assertEquals(2.0, volume1.divide(volume2), 0.0001);
+    }
+
+    @Test
     void backwardCompatibilityAddWeightInSameUnit() {
         Quantity<WeightUnit> g1 = new Quantity<>(500, WeightUnit.GRAM);
         Quantity<WeightUnit> g2 = new Quantity<>(500, WeightUnit.GRAM);
         Quantity<WeightUnit> result = g1.add(g2, WeightUnit.GRAM);
         assertEquals(1000, result.getValue(), 0.0001);
+    }
+
+    @Test
+    void testSubtractionOfVolumesWithDifferentUnits(){
+        Quantity<VolumeUnit> volume1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> volume2 = new Quantity<>(500.0,VolumeUnit.MILLILITRE);
+        assertEquals(0.5, volume1.subtract(volume2).getValue(), 0.0001);
     }
 
     @Test
@@ -162,6 +205,12 @@ public class QuantityMeasurementAppTest {
         assertTrue(QuantityMeasurementApp.demonstrateEquality(quantity1,quantity2));
     }
 
+    @Test
+    void testDivisionOfWeightsInSameUnit(){
+        Quantity<WeightUnit> quantity1 = new Quantity<>(3.0,WeightUnit.KILOGRAM);
+        Quantity<WeightUnit> quantity2 = new Quantity<>(1.5,WeightUnit.KILOGRAM);
+        assertEquals(2.0,quantity1.divide(quantity2),0.001);
+    }
 
     @Test
     void convertWeightKilogramsToGrams() {
