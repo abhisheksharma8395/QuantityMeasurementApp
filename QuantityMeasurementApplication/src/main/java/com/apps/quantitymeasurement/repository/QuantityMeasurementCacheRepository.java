@@ -43,6 +43,7 @@ public class QuantityMeasurementCacheRepository implements IQuantityMeasurementR
     @Override
     public void save(QuantityMeasurementEntity entity) {
         quantityMeasurementEntityCache.add(entity);
+        saveToDisk(entity);
     }
 
     @Override
@@ -61,7 +62,7 @@ public class QuantityMeasurementCacheRepository implements IQuantityMeasurementR
 
     private void loadFromDisk() {
         File file = new File(FILE_NAME);
-        if(!file.exists()){
+        if(file.exists()){
             try(FileInputStream fileInputStream = new FileInputStream(FILE_NAME);
                 ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)
             ){

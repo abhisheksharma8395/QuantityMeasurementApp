@@ -12,7 +12,7 @@ public class QuantityModel<U extends IMeasurableUnit> {
     }
 
     public double getValue(){
-        return this.getValue();
+        return this.value;
     }
 
     public U getUnit(){
