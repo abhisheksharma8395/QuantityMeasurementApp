@@ -1,6 +1,5 @@
 package com.apps.quantitymeasurement.entity;
 
-import com.apps.quantitymeasurement.Quantity;
 import com.apps.quantitymeasurement.model.QuantityModel;
 
 import java.util.Objects;
@@ -43,7 +42,7 @@ public class QuantityMeasurementEntity implements java.io.Serializable{
         this.isError = false;
     }
 
-    // Constructor for comparison
+    // Constructor for conversion
     public QuantityMeasurementEntity(QuantityModel<?> thisQuantity, String operation, QuantityModel<?> resultQuantity) {
         this(thisQuantity, null, operation);
         this.resultValue = resultQuantity.getValue();

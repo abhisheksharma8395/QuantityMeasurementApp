@@ -4,7 +4,7 @@ public enum LengthUnit implements IMeasurableUnit {
     FEET(1.0),
     INCHES(1.0/12),
     YARDS(3.0),
-    CENTIMETERS();
+    CENTIMETERS(0.0328084);
 
     private double conversionFactor;
 
@@ -14,7 +14,7 @@ public enum LengthUnit implements IMeasurableUnit {
 
     @Override
     public double getConversionFactor() {
-        return 0;
+        return this.conversionFactor;
     }
 
     @Override

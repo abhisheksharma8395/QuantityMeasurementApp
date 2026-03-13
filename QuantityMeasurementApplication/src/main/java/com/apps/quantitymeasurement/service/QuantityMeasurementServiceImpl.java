@@ -41,41 +41,128 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
             if (!source.getUnit().getMeasurementType().equals(target.getUnit().getMeasurementType())) {
                 throw new QuantityMeasurementException("Cannot convert between different measurement types");
             }
-            double baseValue = source.getValue() * source.getUnit().getConversionFactor();
-            double convertedValue = baseValue / target.getUnit().getConversionFactor();
-            QuantityModel<?> resultModel = new QuantityModel<>(convertedValue, target.getUnit());
-            QuantityMeasurementEntity entity = new QuantityMeasurementEntity(source, null, "CONVERT", resultModel);
-            repository.save(entity);
-            return new QuantityDTO(convertedValue, target.getUnit().getUnitName(), target.getUnit().getMeasurementType());
+            if(source.getUnit().getClass().equals(TemperatureUnit.class)){
+                return convertTo(source,target);
+            }
+            else {
+                double baseValue = source.getValue() * source.getUnit().getConversionFactor();
+                double convertedValue = baseValue / target.getUnit().getConversionFactor();
+                QuantityModel<?> resultModel = new QuantityModel<>(convertedValue, target.getUnit());
+                QuantityMeasurementEntity entity = new QuantityMeasurementEntity(source, "CONVERT", resultModel);
+                repository.save(entity);
+                return new QuantityDTO(convertedValue, target.getUnit().getUnitName(), target.getUnit().getMeasurementType());
+            }
 
         } catch (QuantityMeasurementException e) {
             throw new QuantityMeasurementException("Exception Occurred");
         }
     }
 
-    @Override
-    public QuantityDTO add(QuantityDTO thisQuantityDTO, QuantityDTO thatQuantityDTO) {
-        return null;
+    public QuantityDTO convertTo(QuantityModel<?> thisQuantityModel , QuantityModel<?> thatQuantityModel){
+        TemperatureUnit thisUnit = (TemperatureUnit) thisQuantityModel.getUnit();
+        TemperatureUnit thatUnit = (TemperatureUnit) thatQuantityModel.getUnit();
+        double newValue = thisUnit.convertTo(thisQuantityModel.getValue(),thatUnit);
+        QuantityModel<TemperatureUnit> resultModel = new QuantityModel<>(newValue,thatUnit);
+        QuantityMeasurementEntity entity = new QuantityMeasurementEntity(thisQuantityModel,"CONVERT",resultModel);
+        repository.save(entity);
+        return new QuantityDTO(newValue,thatUnit.getUnitName(),thatUnit.getMeasurementType());
     }
 
     @Override
-    public QuantityDTO add(QuantityDTO thisQuantityDTO, QuantityDTO thatQuantityDTO, QuantityDTO targetUnitDTO) {
-        return null;
+    public QuantityDTO add(QuantityDTO thisQuantityDTO, QuantityDTO thatQuantityDTO) throws QuantityMeasurementException {
+        QuantityModel<?> q1 = getQuantityModel(thisQuantityDTO);
+        QuantityModel<?> q2 = getQuantityModel(thatQuantityDTO);
+        if (!q1.getUnit().getMeasurementType().equals(q2.getUnit().getMeasurementType())) {
+            throw new QuantityMeasurementException("Cannot add different measurement types");
+        }
+
+        double baseValue1 = q1.getValue() * q1.getUnit().getConversionFactor();
+        double baseValue2 = q2.getValue() * q2.getUnit().getConversionFactor();
+        double resultBase = baseValue1 + baseValue2;
+        double resultValue = resultBase / q1.getUnit().getConversionFactor();
+        QuantityModel<?> resultModel = new QuantityModel<>(resultValue, q1.getUnit());
+        QuantityMeasurementEntity entity = new QuantityMeasurementEntity(q1, q2, "ADD", resultModel);
+        repository.save(entity);
+        return new QuantityDTO(resultValue, q1.getUnit().getUnitName(), q1.getUnit().getMeasurementType());
     }
 
     @Override
-    public QuantityDTO subtract(QuantityDTO thisQuantityDTO, QuantityDTO thatQuantityDTO) {
-        return null;
+    public QuantityDTO add(QuantityDTO thisQuantityDTO, QuantityDTO thatQuantityDTO, QuantityDTO targetUnitDTO) throws QuantityMeasurementException {
+        QuantityModel<?> q1 = getQuantityModel(thisQuantityDTO);
+        QuantityModel<?> q2 = getQuantityModel(thatQuantityDTO);
+        QuantityModel<?> target = getQuantityModel(targetUnitDTO);
+
+        if (!q1.getUnit().getMeasurementType().equals(q2.getUnit().getMeasurementType())) {
+            throw new QuantityMeasurementException("Cannot add different measurement types");
+        }
+
+        double base1 = q1.getValue() * q1.getUnit().getConversionFactor();
+        double base2 = q2.getValue() * q2.getUnit().getConversionFactor();
+        double resultBase = base1 + base2;
+        double converted = resultBase / target.getUnit().getConversionFactor();
+        QuantityModel<?> resultModel = new QuantityModel<>(converted, target.getUnit());
+        QuantityMeasurementEntity entity = new QuantityMeasurementEntity(q1, q2, "ADD", resultModel);
+        repository.save(entity);
+        return new QuantityDTO(converted, target.getUnit().getUnitName(), target.getUnit().getMeasurementType());
     }
 
     @Override
-    public QuantityDTO subtract(QuantityDTO thisQuantityDTO, QuantityDTO thatQuantityDTO, QuantityDTO targetUnitDTO) {
-        return null;
+    public QuantityDTO subtract(QuantityDTO thisQuantityDTO, QuantityDTO thatQuantityDTO) throws QuantityMeasurementException {
+        QuantityModel<?> q1 = getQuantityModel(thisQuantityDTO);
+        QuantityModel<?> q2 = getQuantityModel(thatQuantityDTO);
+        if (!q1.getUnit().getMeasurementType().equals(q2.getUnit().getMeasurementType())) {
+            throw new QuantityMeasurementException("Cannot add different measurement types");
+        }
+
+        double baseValue1 = q1.getValue() * q1.getUnit().getConversionFactor();
+        double baseValue2 = q2.getValue() * q2.getUnit().getConversionFactor();
+        double resultBase = baseValue1 - baseValue2;
+        double resultValue = resultBase / q1.getUnit().getConversionFactor();
+        QuantityModel<?> resultModel = new QuantityModel<>(resultValue, q1.getUnit());
+        QuantityMeasurementEntity entity = new QuantityMeasurementEntity(q1, q2, "SUBTRACT", resultModel);
+        repository.save(entity);
+        return new QuantityDTO(resultValue, q1.getUnit().getUnitName(), q1.getUnit().getMeasurementType());
     }
 
     @Override
-    public double divide(QuantityDTO thisQuantityDTO, QuantityDTO thatQuantityDTO) {
-        return 0;
+    public QuantityDTO subtract(QuantityDTO thisQuantityDTO, QuantityDTO thatQuantityDTO, QuantityDTO targetUnitDTO) throws QuantityMeasurementException {
+        QuantityModel<?> q1 = getQuantityModel(thisQuantityDTO);
+        QuantityModel<?> q2 = getQuantityModel(thatQuantityDTO);
+        QuantityModel<?> target = getQuantityModel(targetUnitDTO);
+
+        if (!q1.getUnit().getMeasurementType().equals(q2.getUnit().getMeasurementType())) {
+            throw new QuantityMeasurementException("Cannot add different measurement types");
+        }
+
+        double base1 = q1.getValue() * q1.getUnit().getConversionFactor();
+        double base2 = q2.getValue() * q2.getUnit().getConversionFactor();
+        double resultBase = base1 - base2;
+        double converted = resultBase / target.getUnit().getConversionFactor();
+        QuantityModel<?> resultModel = new QuantityModel<>(converted, target.getUnit());
+        QuantityMeasurementEntity entity = new QuantityMeasurementEntity(q1, q2, "SUBTRACT", resultModel);
+        repository.save(entity);
+        return new QuantityDTO(converted, target.getUnit().getUnitName(), target.getUnit().getMeasurementType());
+    }
+
+    @Override
+    public double divide(QuantityDTO thisQuantityDTO, QuantityDTO thatQuantityDTO) throws QuantityMeasurementException {
+        QuantityModel<?> q1 = getQuantityModel(thisQuantityDTO);
+        QuantityModel<?> q2 = getQuantityModel(thatQuantityDTO);
+        if (!q1.getUnit().getMeasurementType().equals(q2.getUnit().getMeasurementType())) {
+            throw new QuantityMeasurementException("Cannot divide different measurement types");
+        }
+
+        double base1 = q1.getValue() * q1.getUnit().getConversionFactor();
+        double base2 = q2.getValue() * q2.getUnit().getConversionFactor();
+        if (base2 == 0) {
+            throw new QuantityMeasurementException("Division by zero");
+        }
+
+        double result = base1 / base2;
+
+        QuantityMeasurementEntity entity = new QuantityMeasurementEntity(q1, q2, "DIVIDE", String.valueOf(result));
+        repository.save(entity);
+        return result;
     }
 
     private QuantityModel<?> getQuantityModel(QuantityDTO dto) throws QuantityMeasurementException {

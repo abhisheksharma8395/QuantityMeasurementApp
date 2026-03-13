@@ -1,100 +1,63 @@
 package com.apps.quantitymeasurement.app;
 
-import com.apps.quantitymeasurement.unit.IMeasurableUnit;
-import com.apps.quantitymeasurement.Quantity;
-import com.apps.quantitymeasurement.unit.VolumeUnit;
-import com.apps.quantitymeasurement.unit.WeightUnit;
+import com.apps.quantitymeasurement.controller.QuantityMeasurementController;
+import com.apps.quantitymeasurement.dto.QuantityDTO;
+import com.apps.quantitymeasurement.repository.IQuantityMeasurementRepository;
+import com.apps.quantitymeasurement.repository.QuantityMeasurementCacheRepository;
+import com.apps.quantitymeasurement.service.QuantityMeasurementServiceImpl;
 
 public class QuantityMeasurementApp {
 
-    // This method demonstrates  the equality between two quantities
-    public static <U extends IMeasurableUnit> boolean demonstrateEquality(Quantity<U> quantity1, Quantity<U> quantity2) {
-        if (quantity1 == null) return false;
-        return quantity1.equals(quantity2);
+    private static QuantityMeasurementApp instance;
+    public QuantityMeasurementController controller;
+    public IQuantityMeasurementRepository repository;
+
+    private QuantityMeasurementApp(){
+        this.repository = QuantityMeasurementCacheRepository.getInstance();
+        QuantityMeasurementServiceImpl service = new QuantityMeasurementServiceImpl(this.repository);
+        this.controller = new QuantityMeasurementController(service);
     }
 
-    // This method demonstrate the conversion of a quantity to target unit
-    public static <U extends IMeasurableUnit> Quantity<U> demonstrateConversion(Quantity<U> quantity, U targetUnit) {
-        double baseValue = quantity.convertTo(targetUnit);
-        double actualValue = baseValue / targetUnit.getConversionFactor();
-        Quantity<U> convertedWeight = new Quantity<>(baseValue, targetUnit);
-        return convertedWeight;
-    }
-
-
-    public static <U extends IMeasurableUnit> Quantity<U> demonstrateAddition(Quantity<U> quantity1, Quantity<U> quantity2) {
-        return quantity1.add(quantity2);
-    }
-
-    public static <U extends IMeasurableUnit> Quantity<U> demonstrateAddition(Quantity<U> quantity1, Quantity<U> quantity2, U targetUnit) {
-        if (targetUnit == null) throw new IllegalArgumentException();
-        return quantity1.add(quantity2, targetUnit);
-    }
-
-    public static <U extends IMeasurableUnit> Quantity<U> demonstrateSubtraction(Quantity<U> quantity1, Quantity<U> quantity2) {
-        return quantity1.add(quantity2);
-    }
-
-    public static <U extends IMeasurableUnit> Quantity<U> demonstrateSubtraction(Quantity<U> quantity1, Quantity<U> quantity2, U targetUnit) {
-        if (targetUnit == null) throw new IllegalArgumentException();
-        return quantity1.add(quantity2, targetUnit);
-    }
-
-    public static <U extends IMeasurableUnit> double demonstrateDivison(Quantity<U> quantity1, Quantity<U> quantity2, U targetUnit) {
-        if (targetUnit == null) throw new IllegalArgumentException();
-        return quantity1.divide(quantity2);
+    public static QuantityMeasurementApp getInstance(){
+        if(instance == null) instance = new QuantityMeasurementApp();
+        return instance;
     }
 
     public static void main(String[] args) {
-        // Demonstration equality between the two quantities
-        Quantity<WeightUnit> weightInGrams = new Quantity<>(1000.0, WeightUnit.GRAM);
-        Quantity<WeightUnit> weightInKilograms = new Quantity<>(1.0, WeightUnit.KILOGRAM);
-        boolean areEqual = demonstrateEquality(weightInGrams, weightInKilograms);
-        System.out.println("Are weights equal? " + areEqual);
+        QuantityMeasurementApp app = QuantityMeasurementApp.getInstance();
 
-        // Demonstration conversion between the two quantities
-        Quantity<WeightUnit> convertedWeight = demonstrateConversion(weightInGrams, WeightUnit.KILOGRAM);
-        System.out.println("Converted Weight: " + convertedWeight.getValue() + " " + convertedWeight.getUnit());
+        try {
 
-        // Demonstration addition of two quantities (result in first unit)
-        Quantity<WeightUnit> weightInPounds = new Quantity<>(2.20462, WeightUnit.POUND);
-        Quantity<WeightUnit> sumWeight = demonstrateAddition(weightInKilograms, weightInPounds);
-        System.out.println("Sum Weight: " + sumWeight.getValue() + " " + sumWeight.getUnit());
-
-        // Demonstration addition with specified target unit
-        Quantity<WeightUnit> sumWeightInGrams = demonstrateAddition(weightInKilograms, weightInPounds, WeightUnit.GRAM);
-        System.out.println("Sum Weight in Grams: " + sumWeightInGrams.getValue() + " " + sumWeightInGrams.getUnit());
-
-        // Demonstration equality between the two quantities
-        Quantity<VolumeUnit> volumeInLitre = new Quantity<>(1.0, VolumeUnit.LITRE);
-        Quantity<VolumeUnit> volumeInMillilitre = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
-        boolean areVolumesEqual = demonstrateEquality(volumeInLitre, volumeInMillilitre);
-        System.out.println("Are volumes equal? " + areVolumesEqual);
+            // Example 1: Comparison (1 foot == 12 inches)
+            QuantityDTO q1 = new QuantityDTO(1, "FEET", "LENGTH");
+            QuantityDTO q2 = new QuantityDTO(12, "INCHES", "LENGTH");
+            boolean result = app.controller.performComparison(q1, q2);
+            System.out.println("Comparison Result: " + result);
 
 
-        // Demonstration conversion between the two quantities
-        Quantity<VolumeUnit> convertedVolume = demonstrateConversion(volumeInLitre, VolumeUnit.MILLILITRE);
-        System.out.println("Converted Volume: " + convertedVolume.getValue() + " " + convertedVolume.getUnit());
+            // Example 2: Conversion (1 gallon → litre)
+            QuantityDTO source = new QuantityDTO(1, "GALLON", "VOLUME");
+            QuantityDTO target = new QuantityDTO(0, "LITRE", "VOLUME");
+            QuantityDTO converted = app.controller.performConversion(source, target);
+            System.out.println("Converted Value: " + converted.getValue() + " " + converted.getUnit());
 
 
-        // Demonstration addition of two quantities (result in first unit)
-        Quantity<VolumeUnit> volumeInGallon = new Quantity<>(1.0, VolumeUnit.GALLON);
-        Quantity<VolumeUnit> litreEquivalentOfGallon = new Quantity<>(3.78541, VolumeUnit.LITRE);
-        Quantity<VolumeUnit> sumVolume = demonstrateAddition(volumeInGallon, litreEquivalentOfGallon);
-        System.out.println("Sum Volume: " + sumVolume.getValue() + " " + sumVolume.getUnit());
+            // Example 3: Addition
+            QuantityDTO a = new QuantityDTO(1, "FEET", "LENGTH");
+            QuantityDTO b = new QuantityDTO(12, "INCHES", "LENGTH");
+            QuantityDTO sum = app.controller.performAddition(a, b);
+            System.out.println("Addition Result: " + sum.getValue() + " " + sum.getUnit());
 
-        // Demonstration addition with specified target unit
-        Quantity<VolumeUnit> sumVolumeInMillilitre = demonstrateAddition(volumeInLitre, volumeInMillilitre, VolumeUnit.MILLILITRE);
-        System.out.println("Sum Volume in Millilitre: " + sumVolumeInMillilitre.getValue() + " " + sumVolumeInMillilitre.getUnit());
 
-        Quantity<VolumeUnit> litre = new Quantity<>(1.0,VolumeUnit.LITRE);
-        Quantity<VolumeUnit> millilitre = new Quantity<>(2000.0,VolumeUnit.MILLILITRE);
+            // Example 4: Division
+            QuantityDTO d1 = new QuantityDTO(10, "FEET", "LENGTH");
+            QuantityDTO d2 = new QuantityDTO(5, "FEET", "LENGTH");
+            double divResult = app.controller.performDivision(d1, d2);
+            System.out.println("Division Result: " + divResult);
 
-        Quantity<VolumeUnit> gallon = new Quantity<>(1.0,VolumeUnit.GALLON);
-        Quantity<VolumeUnit> litreVolume = new Quantity<>(3.78541,VolumeUnit.LITRE);
-
-        System.out.println(millilitre.divide(litre));
-        System.out.println(gallon.subtract(litreVolume));
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 }
 

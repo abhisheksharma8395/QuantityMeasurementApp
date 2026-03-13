@@ -1,14 +1,23 @@
 package com.apps.quantitymeasurement.unit;
 
-import com.apps.quantitymeasurement.SupportsArithmetic;
-
 public enum WeightUnit implements IMeasurableUnit {
 
-    MILLIGRAM,
-    GRAM,
-    KILOGRAM,
-    POUND,
-    TONNE;
+    MILLIGRAM(1.0/1000),
+    GRAM(1.0),
+    KILOGRAM(1000),
+    POUND(453.59237),
+    TONNE(1e6);
+
+    private double conversionFactor;
+
+    WeightUnit(double conversionFactor){
+        this.conversionFactor = conversionFactor;
+    }
+
+    @Override
+    public double getConversionFactor() {
+        return this.conversionFactor;
+    }
 
     @Override
     public String getUnitName() {
