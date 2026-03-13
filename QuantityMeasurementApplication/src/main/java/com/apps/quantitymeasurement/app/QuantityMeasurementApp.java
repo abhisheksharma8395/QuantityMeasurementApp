@@ -1,15 +1,20 @@
-package com.apps.quantitymeasurement;
+package com.apps.quantitymeasurement.app;
+
+import com.apps.quantitymeasurement.unit.IMeasurableUnit;
+import com.apps.quantitymeasurement.Quantity;
+import com.apps.quantitymeasurement.unit.VolumeUnit;
+import com.apps.quantitymeasurement.unit.WeightUnit;
 
 public class QuantityMeasurementApp {
 
     // This method demonstrates  the equality between two quantities
-    public static <U extends IMeasurable> boolean demonstrateEquality(Quantity<U> quantity1, Quantity<U> quantity2) {
+    public static <U extends IMeasurableUnit> boolean demonstrateEquality(Quantity<U> quantity1, Quantity<U> quantity2) {
         if (quantity1 == null) return false;
         return quantity1.equals(quantity2);
     }
 
     // This method demonstrate the conversion of a quantity to target unit
-    public static <U extends IMeasurable> Quantity<U> demonstrateConversion(Quantity<U> quantity, U targetUnit) {
+    public static <U extends IMeasurableUnit> Quantity<U> demonstrateConversion(Quantity<U> quantity, U targetUnit) {
         double baseValue = quantity.convertTo(targetUnit);
         double actualValue = baseValue / targetUnit.getConversionFactor();
         Quantity<U> convertedWeight = new Quantity<>(baseValue, targetUnit);
@@ -17,25 +22,25 @@ public class QuantityMeasurementApp {
     }
 
 
-    public static <U extends IMeasurable> Quantity<U> demonstrateAddition(Quantity<U> quantity1, Quantity<U> quantity2) {
+    public static <U extends IMeasurableUnit> Quantity<U> demonstrateAddition(Quantity<U> quantity1, Quantity<U> quantity2) {
         return quantity1.add(quantity2);
     }
 
-    public static <U extends IMeasurable> Quantity<U> demonstrateAddition(Quantity<U> quantity1, Quantity<U> quantity2, U targetUnit) {
+    public static <U extends IMeasurableUnit> Quantity<U> demonstrateAddition(Quantity<U> quantity1, Quantity<U> quantity2, U targetUnit) {
         if (targetUnit == null) throw new IllegalArgumentException();
         return quantity1.add(quantity2, targetUnit);
     }
 
-    public static <U extends IMeasurable> Quantity<U> demonstrateSubtraction(Quantity<U> quantity1, Quantity<U> quantity2) {
+    public static <U extends IMeasurableUnit> Quantity<U> demonstrateSubtraction(Quantity<U> quantity1, Quantity<U> quantity2) {
         return quantity1.add(quantity2);
     }
 
-    public static <U extends IMeasurable> Quantity<U> demonstrateSubtraction(Quantity<U> quantity1, Quantity<U> quantity2, U targetUnit) {
+    public static <U extends IMeasurableUnit> Quantity<U> demonstrateSubtraction(Quantity<U> quantity1, Quantity<U> quantity2, U targetUnit) {
         if (targetUnit == null) throw new IllegalArgumentException();
         return quantity1.add(quantity2, targetUnit);
     }
 
-    public static <U extends IMeasurable> double demonstrateDivison(Quantity<U> quantity1, Quantity<U> quantity2, U targetUnit) {
+    public static <U extends IMeasurableUnit> double demonstrateDivison(Quantity<U> quantity1, Quantity<U> quantity2, U targetUnit) {
         if (targetUnit == null) throw new IllegalArgumentException();
         return quantity1.divide(quantity2);
     }

@@ -1,10 +1,14 @@
 package com.apps.quantitymeasurement;
 
 
+import com.apps.quantitymeasurement.unit.IMeasurableUnit;
+import com.apps.quantitymeasurement.unit.LengthUnit;
+import com.apps.quantitymeasurement.unit.TemperatureUnit;
+
 import java.util.Objects;
 import java.util.function.DoubleBinaryOperator;
 
-public class Quantity<U extends IMeasurable> {
+public class Quantity<U extends IMeasurableUnit> {
     private double value;
     private U unit;
 
@@ -23,7 +27,7 @@ public class Quantity<U extends IMeasurable> {
     }
 
     // This method first converts the current value to the base unit , then convert the base value to target unit.
-    public <U extends IMeasurable> double convertTo(U targetUnit){
+    public <U extends IMeasurableUnit> double convertTo(U targetUnit){
         if(this.unit.getClass().equals(TemperatureUnit.class)){
             TemperatureUnit thisUnit = (TemperatureUnit) unit;
             double newValue = thisUnit.convertTo(this.value,(TemperatureUnit) targetUnit);
@@ -33,7 +37,7 @@ public class Quantity<U extends IMeasurable> {
         return baseValue / targetUnit.getConversionFactor();
     }
 
-    public <U extends IMeasurable> Quantity<U> convert(U targetUnit){
+    public <U extends IMeasurableUnit> Quantity<U> convert(U targetUnit){
         return new Quantity<>(convertTo(targetUnit),targetUnit);
     }
 
