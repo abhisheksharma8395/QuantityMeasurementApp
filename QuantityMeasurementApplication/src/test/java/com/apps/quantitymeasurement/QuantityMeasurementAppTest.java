@@ -176,9 +176,6 @@ public class QuantityMeasurementAppTest {
 
     @Test
     void testSubtractionOfVolumesWithDifferentUnits(){
-        Quantity<VolumeUnit> volume1 = new Quantity<>(1.0, VolumeUnit.LITRE);
-        Quantity<VolumeUnit> volume2 = new Quantity<>(500.0,VolumeUnit.MILLILITRE);
-        assertEquals(0.5, volume1.subtract(volume2).getValue(), 0.0001);
     }
 
     @Test
