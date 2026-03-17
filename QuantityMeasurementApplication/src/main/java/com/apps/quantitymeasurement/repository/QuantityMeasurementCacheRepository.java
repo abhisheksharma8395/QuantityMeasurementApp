@@ -1,9 +1,11 @@
 package com.apps.quantitymeasurement.repository;
+import com.apps.quantitymeasurement.app.QuantityMeasurementApp;
 import com.apps.quantitymeasurement.entity.QuantityMeasurementEntity;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 class AppendableObjectOutputStream extends ObjectOutputStream{
 
@@ -24,6 +26,7 @@ class AppendableObjectOutputStream extends ObjectOutputStream{
 
 
 public class QuantityMeasurementCacheRepository implements IQuantityMeasurementRepository {
+    private static final Logger logger = Logger.getLogger(QuantityMeasurementApp.class.getName());
     public static final String FILE_NAME = "quantity_measurement_repo.ser";
     List<QuantityMeasurementEntity> quantityMeasurementEntityCache;
     private static QuantityMeasurementCacheRepository instance;
@@ -31,6 +34,7 @@ public class QuantityMeasurementCacheRepository implements IQuantityMeasurementR
     private QuantityMeasurementCacheRepository(){
         quantityMeasurementEntityCache = new ArrayList<>();
         loadFromDisk();
+        logger.info("QuantityMeasurementCacheRepository initialized with "+quantityMeasurementEntityCache.size() + " entities loaded from disk");
     }
 
     public static QuantityMeasurementCacheRepository getInstance(){

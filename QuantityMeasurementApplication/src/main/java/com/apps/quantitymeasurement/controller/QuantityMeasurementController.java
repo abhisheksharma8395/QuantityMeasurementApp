@@ -4,11 +4,15 @@ import com.apps.quantitymeasurement.dto.QuantityDTO;
 import com.apps.quantitymeasurement.exception.QuantityMeasurementException;
 import com.apps.quantitymeasurement.service.IQuantityMeasurementService;
 
+import java.util.logging.Logger;
+
 public class QuantityMeasurementController {
+    private static final Logger logger = Logger.getLogger(QuantityMeasurementController.class.getName());
     private IQuantityMeasurementService quantityMeasurementService;
 
     public QuantityMeasurementController(IQuantityMeasurementService quantityMeasurementService){
         this.quantityMeasurementService = quantityMeasurementService;
+        logger.info("QuantityMeasurementController initialized with service : "+quantityMeasurementService);
     }
 
     public boolean performComparison(QuantityDTO thisQuantityDTO , QuantityDTO thatQuantityDTO) throws QuantityMeasurementException {

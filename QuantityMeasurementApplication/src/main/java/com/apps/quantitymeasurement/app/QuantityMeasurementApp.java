@@ -4,18 +4,25 @@ import com.apps.quantitymeasurement.controller.QuantityMeasurementController;
 import com.apps.quantitymeasurement.dto.QuantityDTO;
 import com.apps.quantitymeasurement.repository.IQuantityMeasurementRepository;
 import com.apps.quantitymeasurement.repository.QuantityMeasurementCacheRepository;
+import com.apps.quantitymeasurement.repository.QuantityMeasurementDatabaseRepository;
 import com.apps.quantitymeasurement.service.QuantityMeasurementServiceImpl;
 
+import java.util.logging.Logger;
+
 public class QuantityMeasurementApp {
+
+
+    private static final Logger logger = Logger.getLogger(QuantityMeasurementApp.class.getName());
 
     private static QuantityMeasurementApp instance;
     public QuantityMeasurementController controller;
     public IQuantityMeasurementRepository repository;
 
     private QuantityMeasurementApp(){
-        this.repository = QuantityMeasurementCacheRepository.getInstance();
+        this.repository = QuantityMeasurementDatabaseRepository.getInstance();
         QuantityMeasurementServiceImpl service = new QuantityMeasurementServiceImpl(this.repository);
         this.controller = new QuantityMeasurementController(service);
+        logger.info("Quantity Measurement Application initialized with Cache Repository");
     }
 
     public static QuantityMeasurementApp getInstance(){
