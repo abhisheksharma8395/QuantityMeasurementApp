@@ -40,7 +40,7 @@ public class QuantityMeasurementAppTest {
         assertEquals(LengthUnit.FEET, model.getUnit());
     }
 
-    // ENTITY TEST
+    // ENTITY TEST Method
     @Test
     void testEntityCreation() {
         QuantityModel<LengthUnit> q1 = new QuantityModel<>(1, LengthUnit.FEET);
