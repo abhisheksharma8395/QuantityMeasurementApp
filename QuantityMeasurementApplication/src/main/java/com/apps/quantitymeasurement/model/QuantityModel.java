@@ -1,22 +1,15 @@
 package com.apps.quantitymeasurement.model;
 
 import com.apps.quantitymeasurement.unit.IMeasurableUnit;
+import lombok.Getter;
 
 public class QuantityModel<U extends IMeasurableUnit> {
-    public double value;
-    public U unit;
+    @Getter public double value;
+    @Getter public U unit;
 
     public QuantityModel(double value , U unit) {
         this.value = value;
         this.unit = unit;
-    }
-
-    public double getValue(){
-        return this.value;
-    }
-
-    public U getUnit(){
-        return this.unit;
     }
 
     @Override

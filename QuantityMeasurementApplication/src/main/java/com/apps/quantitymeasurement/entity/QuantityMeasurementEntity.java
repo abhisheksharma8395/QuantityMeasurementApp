@@ -1,27 +1,69 @@
 package com.apps.quantitymeasurement.entity;
 
 import com.apps.quantitymeasurement.model.QuantityModel;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Objects;
+import java.time.LocalDateTime;
 
-public class QuantityMeasurementEntity implements java.io.Serializable{
-    private static final long serialVersionUID = 1L;
-    public double thisValue;
-    public String thisUnit;
-    public String thisMeasurementType;
-    public double thatValue;
-    public String thatUnit;
-    public String thatMeasurementType;
-    public String operation;
-    public double resultValue;
-    public String resultUnit;
-    public String resultMeasurementType;
-    public String resultString;
-    public boolean isError;
-    public String errorMessage;
+@Entity
+@Table(name = "quantity_measurement_entity", indexes = {
+        @Index(name = "idx_operation", columnList = "operation"),
+        @Index(name = "idx_measurement_type", columnList = "this_measurement_type"),
+        @Index(name = "idx_created_at", columnList = "created_at")
+        })
+@Data   // -> Automatically Creates Getter , Setter , toString() , equals() , hashCode() and we can also use @Getter and @Setter Annotation for each field
+@NoArgsConstructor
+@AllArgsConstructor
+public class QuantityMeasurementEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "this_value", nullable = false)
+    private double thisValue;
+    @Column(name = "this_unit", nullable = false)
+    private String thisUnit;
+    @Column(name = "this_measurement_type", nullable = false)
+    private String thisMeasurementType;
+
+    @Column(name = "that_value", nullable = false)
+    private Double thatValue;
+    @Column(name = "that_unit", nullable = false)
+    private String thatUnit;
+    @Column(name = "that_measurement_type", nullable = false)
+    private String thatMeasurementType;
+
+    @Column(name = "operation", nullable = false)
+    private String operation;
+
+    @Column(name = "result_value")
+    private Double resultValue;
+    @Column(name = "result_unit")
+    private String resultUnit;
+    @Column(name = "result_measurement_type")
+    private String resultMeasurementType;
+
+    @Column(name = "result_string")
+    private String resultString;
+
+    @Column(name = "is_error")
+    private boolean isError;
+
+    @Column(name = "error_message")
+    private String errorMessage;
+
+    @Column(name = "created_at",nullable = false,updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at",nullable = false)
+    private LocalDateTime updatedAt;
 
     // Base Constructor
-    public QuantityMeasurementEntity(QuantityModel<?> thisQuantity ,QuantityModel<?> thatQuantity , String operation){
+    public QuantityMeasurementEntity(QuantityModel<?> thisQuantity , QuantityModel<?> thatQuantity , String operation){
         if(thisQuantity != null){
             this.thisValue = thisQuantity.getValue();
             this.thisUnit = thisQuantity.getUnit().getUnitName();
@@ -67,33 +109,17 @@ public class QuantityMeasurementEntity implements java.io.Serializable{
         this.isError = isError;
     }
 
-    @Override
-    public boolean equals(Object obj){
-        if(this == obj) return true;
-        if(obj == null) return false;
-        if(!(obj instanceof QuantityMeasurementEntity)) return false;
-        QuantityMeasurementEntity other = (QuantityMeasurementEntity) obj;
-
-        return Double.compare(this.thisValue, other.thisValue) == 0 &&
-                Double.compare(this.thatValue, other.thatValue) == 0 &&
-                Double.compare(this.resultValue, other.resultValue) == 0 &&
-                Objects.equals(this.thisUnit, other.thisUnit) &&
-                Objects.equals(this.thatUnit, other.thatUnit) &&
-                Objects.equals(this.operation, other.operation) &&
-                Objects.equals(this.resultUnit, other.resultUnit) &&
-                Objects.equals(this.resultString, other.resultString) &&
-                this.isError == other.isError &&
-                Objects.equals(this.errorMessage, other.errorMessage);
+    // This method runs before you want to create data
+    @PrePersist
+    public void onCreate(){
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
-    @Override
-    public String toString() {
-        if (isError) {
-            return "Operation: " + operation + " | Error: " + errorMessage;
-        }
-        if (resultString != null) {
-            return "Operation: " + operation + " | Input: " + thisValue + " " + thisUnit + " , " + thatValue + " " + thatUnit + " | Result: " + resultString;
-        }
-        return "Operation: " + operation + " | Input: " + thisValue + " " + thisUnit + (thatUnit != null ? " , " + thatValue + " " + thatUnit : "") + " | Result: " + resultValue + " " + resultUnit;
+    // This method runs when you want to update the data
+    @PreUpdate
+    public void onUpdate(){
+        updatedAt = LocalDateTime.now();
     }
+
 }
