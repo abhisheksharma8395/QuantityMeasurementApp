@@ -72,29 +72,25 @@ public class QuantityMeasurementController {
         return service.findByThisMeasurementType(measurementType);
     }
 
-    // 8. Find By Created At After
-//    @GetMapping("/findByCreatedAtAfter")
-//    public List<QuantityMeasurementEntity> findByCreatedAtAfter(@RequestParam )
-
-    // 9. Find By Operation and isError false
+    // 8. Find By Operation and isError false
     @GetMapping("/findByOperation")
     public List<QuantityMeasurementEntity> findByOperationAndIsErrorFalse(@RequestParam String operation){
         return service.findByOperationAndIsErrorFalse(operation);
     }
 
-    // 10. Count By Operation and isError false
+    // 9. Count By Operation and isError false
     @GetMapping("/countByOperation")
     public long countByOperation(@RequestParam String operation){
         return service.countByOperationAndIsErrorFalse(operation);
     }
 
-    // 11. Find By is Error true
+    // 10. Find By is Error true
     @GetMapping("/errorTrue")
     public List<QuantityMeasurementEntity> findByIsErrorTrue(){
         return service.findByIsErrorTrue();
     }
 
-    // 12. Delete by id
+    // 11. Delete by id
     @DeleteMapping("/deleteById")
     public ResponseEntity<String> deleteUser(@RequestParam Long id) {
         service.deleteById(id);
