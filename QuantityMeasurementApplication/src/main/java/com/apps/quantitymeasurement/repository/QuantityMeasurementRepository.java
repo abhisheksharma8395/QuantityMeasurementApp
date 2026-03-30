@@ -2,8 +2,6 @@ package com.apps.quantitymeasurement.repository;
 
 import com.apps.quantitymeasurement.entity.QuantityMeasurementEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -18,4 +16,5 @@ public interface QuantityMeasurementRepository extends JpaRepository<QuantityMea
     List<QuantityMeasurementEntity> findByOperationAndIsErrorFalse(String operation);
     long countByOperationAndIsErrorFalse(String operation);
     List<QuantityMeasurementEntity> findByIsErrorTrue();
+    void deleteById(Long id);
 }

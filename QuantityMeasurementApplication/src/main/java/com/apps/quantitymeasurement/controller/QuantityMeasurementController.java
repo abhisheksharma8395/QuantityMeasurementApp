@@ -4,6 +4,7 @@ import com.apps.quantitymeasurement.dto.TwoQuantityRequest;
 import com.apps.quantitymeasurement.entity.QuantityMeasurementEntity;
 import com.apps.quantitymeasurement.exception.QuantityMeasurementException;
 import com.apps.quantitymeasurement.service.IQuantityMeasurementService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -71,22 +72,33 @@ public class QuantityMeasurementController {
         return service.findByThisMeasurementType(measurementType);
     }
 
-    // 8. Find By Operation and isError false
+    // 8. Find By Created At After
+//    @GetMapping("/findByCreatedAtAfter")
+//    public List<QuantityMeasurementEntity> findByCreatedAtAfter(@RequestParam )
+
+    // 9. Find By Operation and isError false
     @GetMapping("/findByOperation")
     public List<QuantityMeasurementEntity> findByOperationAndIsErrorFalse(@RequestParam String operation){
         return service.findByOperationAndIsErrorFalse(operation);
     }
 
-    // 9. Count By Operation and isError false
+    // 10. Count By Operation and isError false
     @GetMapping("/countByOperation")
     public long countByOperation(@RequestParam String operation){
         return service.countByOperationAndIsErrorFalse(operation);
     }
 
-    // 10. Find By is Error true
+    // 11. Find By is Error true
     @GetMapping("/errorTrue")
     public List<QuantityMeasurementEntity> findByIsErrorTrue(){
         return service.findByIsErrorTrue();
+    }
+
+    // 12. Delete by id
+    @DeleteMapping("/deleteById")
+    public ResponseEntity<String> deleteUser(@RequestParam Long id) {
+        service.deleteById(id);
+        return ResponseEntity.ok("User deleted successfully");
     }
 
 }

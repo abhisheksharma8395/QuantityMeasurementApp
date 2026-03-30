@@ -211,6 +211,14 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
         return repository.findByIsErrorTrue();
     }
 
+    @Override
+
+    public void deleteById(Long id) {
+        repository.deleteById(id);
+        System.out.println("Operation with id "+id+" deleted");
+    }
+
+
     private QuantityModel<?> getQuantityModel(QuantityDTO dto) throws QuantityMeasurementException {
         String unitName = dto.getUnit();
         String type = dto.getMeasurementType();

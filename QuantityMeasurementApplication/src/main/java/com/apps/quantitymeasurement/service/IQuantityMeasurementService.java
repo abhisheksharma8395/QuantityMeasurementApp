@@ -22,4 +22,5 @@ public interface IQuantityMeasurementService {
     List<QuantityMeasurementEntity> findByOperationAndIsErrorFalse(String operation);
     long countByOperationAndIsErrorFalse(String operation);
     List<QuantityMeasurementEntity> findByIsErrorTrue();
+    void deleteById(Long id);
 }
