@@ -2,7 +2,7 @@
 
 A Java-based Quantity Measurement application that evolves from basic measurement equality checks to a Spring Boot based REST service with JPA persistence, validation, API documentation, and monitoring.
 
-This repository represents the **UC17** stage of the project while preserving the learning path and design progression from the earlier use cases.
+This repository represents the **UC18** stage of the project while preserving the learning path and design progression from the earlier use cases.
 
 ## Table of Contents
 
