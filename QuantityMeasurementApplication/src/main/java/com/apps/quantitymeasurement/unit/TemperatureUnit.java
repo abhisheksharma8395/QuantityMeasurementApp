@@ -54,6 +54,8 @@ public enum TemperatureUnit implements IMeasurableUnit {
         return 0.0;
     }
 
+    public boolean compare();
+
     @Override
     public String getUnitName() {
         return this.name();

@@ -24,7 +24,16 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers(
+                                "/api/quantity/compare",
+                                "/api/quantity/convert",
+                                "/api/quantity/add",
+                                "/api/quantity/subtract",
+                                "/api/quantity/divide"
+                        ).permitAll()
+                        .requestMatchers(
+                                "/api/quantity/getHistory/**"
+                                ).authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

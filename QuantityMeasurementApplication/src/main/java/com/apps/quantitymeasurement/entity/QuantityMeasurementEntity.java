@@ -30,11 +30,11 @@ public class QuantityMeasurementEntity {
     @Column(name = "this_measurement_type", nullable = false)
     private String thisMeasurementType;
 
-    @Column(name = "that_value", nullable = false)
+    @Column(name = "that_value")
     private Double thatValue;
-    @Column(name = "that_unit", nullable = false)
+    @Column(name = "that_unit")
     private String thatUnit;
-    @Column(name = "that_measurement_type", nullable = false)
+    @Column(name = "that_measurement_type")
     private String thatMeasurementType;
 
     @Column(name = "operation", nullable = false)

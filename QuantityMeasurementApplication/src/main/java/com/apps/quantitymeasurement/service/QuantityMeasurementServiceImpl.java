@@ -40,7 +40,7 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
         }
         double baseValue1 = thisQuantity.getValue() * thisQuantity.getUnit().getConversionFactor();
         double baseValue2 = thatQuantity.getValue() * thatQuantity.getUnit().getConversionFactor();
-        return Math.abs(baseValue1 - baseValue2) < 0.0001;
+        return Math.abs(baseValue1 - baseValue2) < 0.01;
 
     }
 
@@ -49,15 +49,15 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
         try {
             QuantityModel<?> source = getQuantityModel(thisQuantityDTO);
             QuantityModel<?> target = getQuantityModel(thatQuantityDTO);
-            if (!source.getUnit().getMeasurementType().equals(target.getUnit().getMeasurementType())) {
+            if (!(source.getUnit().getMeasurementType().equals(target.getUnit().getMeasurementType()))) {
                 throw new QuantityMeasurementException("Cannot convert between different measurement types");
             }
             if(source.getUnit().getClass().equals(TemperatureUnit.class)){
                 return convertTo(source,target);
             }
             else {
-                double baseValue = source.getValue() * source.getUnit().getConversionFactor();
-                double convertedValue = baseValue / target.getUnit().getConversionFactor();
+                double baseValue = source.getValue() * (source.getUnit().getConversionFactor());
+                double convertedValue = baseValue / (target.getUnit().getConversionFactor());
                 QuantityModel<?> resultModel = new QuantityModel<>(convertedValue, target.getUnit());
                 QuantityMeasurementEntity entity = new QuantityMeasurementEntity(source, "CONVERT", resultModel);
                 repository.save(entity);
