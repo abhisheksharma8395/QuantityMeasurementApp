@@ -2,9 +2,9 @@
 FROM maven:3.8.5-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copy the project files from the subdirectory to the build context
-COPY QuantityMeasurementApplication/pom.xml .
-COPY QuantityMeasurementApplication/src ./src
+# Copy the project files
+COPY pom.xml .
+COPY src ./src
 
 # Build the application
 RUN mvn clean package -DskipTests
