@@ -10,7 +10,7 @@ public enum TemperatureUnit implements IMeasurableUnit {
     final Function<Double,Double> FAHRENHEIT_TO_CELSIUS = (fahrenheit) -> (fahrenheit - 32) * (5.0 / 9.0) ;
     final Function<Double,Double> CELSIUS_TO_FAHRENHEIT = (celsius) -> (celsius * (9.0/5.0)) + 32;
     final Function<Double,Double> CELSIUS_TO_KELVIN = (celsius) -> (celsius + 273.15);
-    final Function<Double,Double> KELVIN_TO_CELSIUS = (celsius) -> (celsius - 273.15);
+    final Function<Double,Double> KELVIN_TO_CELSIUS = (kelvin) -> (kelvin - 273.15);
     final Function<Double,Double> FAHRENHEIT_TO_KELVIN = (fahrenheit) -> (CELSIUS_TO_KELVIN.apply(FAHRENHEIT_TO_CELSIUS.apply(fahrenheit)));
     final Function<Double,Double> KELVIN_TO_FAHRENHEIT = (kelvin) -> (CELSIUS_TO_FAHRENHEIT.apply(KELVIN_TO_CELSIUS.apply(kelvin)));
 
@@ -54,7 +54,6 @@ public enum TemperatureUnit implements IMeasurableUnit {
         return 0.0;
     }
 
-    public boolean compare();
 
     @Override
     public String getUnitName() {

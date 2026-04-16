@@ -23,6 +23,9 @@ public class QuantityMeasurementEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+    private String userName;
+
     @Column(name = "this_value", nullable = false)
     private double thisValue;
     @Column(name = "this_unit", nullable = false)
@@ -63,7 +66,7 @@ public class QuantityMeasurementEntity {
     private LocalDateTime updatedAt;
 
     // Base Constructor
-    public QuantityMeasurementEntity(QuantityModel<?> thisQuantity , QuantityModel<?> thatQuantity , String operation){
+    public QuantityMeasurementEntity(QuantityModel<?> thisQuantity , QuantityModel<?> thatQuantity , String operation, String userName){
         if(thisQuantity != null){
             this.thisValue = thisQuantity.getValue();
             this.thisUnit = thisQuantity.getUnit().getUnitName();
@@ -75,18 +78,19 @@ public class QuantityMeasurementEntity {
             this.thatMeasurementType = thatQuantity.getUnit().getMeasurementType();
         }
         this.operation = operation;
+        this.userName = userName;
     }
 
     // Constructor for Comparison Operation
-    public QuantityMeasurementEntity(QuantityModel<?> thisQuantity, QuantityModel<?> thatQuantity, String operation, String resultString) {
-        this(thisQuantity,thatQuantity,operation);
+    public QuantityMeasurementEntity(QuantityModel<?> thisQuantity, QuantityModel<?> thatQuantity, String operation, String resultString , String userName) {
+        this(thisQuantity,thatQuantity,operation,userName);
         this.resultString = resultString;
         this.isError = false;
     }
 
     // Constructor for conversion
-    public QuantityMeasurementEntity(QuantityModel<?> thisQuantity, String operation, QuantityModel<?> resultQuantity) {
-        this(thisQuantity, null, operation);
+    public QuantityMeasurementEntity(QuantityModel<?> thisQuantity, String operation, QuantityModel<?> resultQuantity,String userName) {
+        this(thisQuantity, null, operation,userName);
         this.resultValue = resultQuantity.getValue();
         this.resultUnit = resultQuantity.getUnit().getUnitName();
         this.resultMeasurementType = resultQuantity.getUnit().getMeasurementType();
@@ -94,8 +98,8 @@ public class QuantityMeasurementEntity {
     }
 
     // Constructor for Arithmetic operations
-    public QuantityMeasurementEntity(QuantityModel<?> thisQuantity, QuantityModel<?> thatQuantity, String operation, QuantityModel<?> resultQuantity) {
-        this(thisQuantity, thatQuantity, operation);
+    public QuantityMeasurementEntity(QuantityModel<?> thisQuantity, QuantityModel<?> thatQuantity, String operation, QuantityModel<?> resultQuantity,String userName) {
+        this(thisQuantity, thatQuantity, operation , userName);
         this.resultValue = resultQuantity.getValue();
         this.resultUnit = resultQuantity.getUnit().getUnitName();
         this.resultMeasurementType = resultQuantity.getUnit().getMeasurementType();
@@ -103,8 +107,8 @@ public class QuantityMeasurementEntity {
     }
 
     // Constructor for Errors
-    public QuantityMeasurementEntity(QuantityModel<?> thisQuantity, QuantityModel<?> thatQuantity, String operation, String errorMessage, boolean isError) {
-        this(thisQuantity, thatQuantity, operation);
+    public QuantityMeasurementEntity(QuantityModel<?> thisQuantity, QuantityModel<?> thatQuantity, String operation, String errorMessage, boolean isError , String userName) {
+        this(thisQuantity, thatQuantity, operation , userName);
         this.errorMessage = errorMessage;
         this.isError = isError;
     }

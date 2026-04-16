@@ -18,7 +18,17 @@ public class AuthService {
     }
 
     public User register(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        if (userRepository.existsByUsername(user.getUsername())) {
+//            throw new RuntimeException("Username already exists");
+//        }
+//
+//        if (userRepository.existsByEmail(user.getEmail())) {
+//            throw new RuntimeException("Email already exists");
+//        }
+
+        user.setPassword(
+                passwordEncoder.encode(user.getPassword())
+        );
         return userRepository.save(user);
     }
 

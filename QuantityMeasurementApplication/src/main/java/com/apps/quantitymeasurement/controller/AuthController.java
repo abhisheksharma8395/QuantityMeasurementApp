@@ -3,6 +3,8 @@ package com.apps.quantitymeasurement.controller;
 import com.apps.quantitymeasurement.entity.User;
 import com.apps.quantitymeasurement.service.AuthService;
 import com.apps.quantitymeasurement.util.JwtUtil;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,16 +24,17 @@ public class AuthController {
 
     // REGISTER
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        return authService.register(user);
+    public ResponseEntity<String> register(@RequestBody User user) {
+        authService.register(user);
+        return new ResponseEntity<>("User Registered Successfully",HttpStatus.OK);
     }
 
     // LOGIN
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
+    public ResponseEntity<String> login(@RequestBody User user) {
 
         User validUser = authService.login(user.getUsername(), user.getPassword());
-
-        return jwtUtil.generateToken(validUser.getUsername());
+        String token = jwtUtil.generateToken(validUser.getUsername());
+        return new ResponseEntity<>(token,HttpStatus.OK);
     }
 }
