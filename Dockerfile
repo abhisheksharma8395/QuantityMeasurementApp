@@ -1,5 +1,5 @@
 # Build stage
-FROM maven:3.8.5-openjdk-17-slim AS build
+FROM maven:3.8.5-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # Copy the project files from the subdirectory to the build context
@@ -10,7 +10,7 @@ COPY QuantityMeasurementApplication/src ./src
 RUN mvn clean package -DskipTests
 
 # Run stage
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 
 # Copy the built JAR from the build stage
